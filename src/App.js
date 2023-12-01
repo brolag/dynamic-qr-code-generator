@@ -1,22 +1,30 @@
-import logo from './logo.svg';
-import './App.css';
+import { useState } from "react";
+import QRCode from "react-qr-code";
+import sha256 from "crypto-js/sha256";
+import "./App.css";
 
 function App() {
+  const [hash, setHash] = useState("");
+  const SECRET = "secret";
+
+  const updateHash = (e) => {
+    const hashDigest = sha256(e.target.value, SECRET);
+    const hash = hashDigest.toString();
+    setHash(hash);
+  }
+
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <div style={{ background: "white", padding: "16px" }}>
+          <input onChange={updateHash} type="text" />
+          <QRCode
+            size={256}
+            style={{ height: "auto", maxWidth: "100%", width: "100%" }}
+            value={hash}
+            viewBox={`0 0 256 256`}
+          />
+        </div>
       </header>
     </div>
   );
